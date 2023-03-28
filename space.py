@@ -26,6 +26,11 @@ enemies_speed = []
 
 enemies_num = 5
 
+bullet = pygame.image.load('bullet.png')
+bullet_rect = bullet.get_rect()
+bullet_status = 'ready'
+bullet_speed = 10
+
 for i in range(enemies_num):
     enemy = pygame.image.load('enemy.png')
     enemies.append(enemy)
@@ -54,15 +59,27 @@ while True:
         player_rect.x += player_speed
         if player_rect.x > 800 - player_rect.width:
             player_rect.x = 800 - player_rect.width
-    
+    if keys[pygame.K_UP]:
+        if bullet_status == 'ready':
+            bullet_status = 'fire'
+            bullet_rect.x = player_rect.x
+            bullet_rect.y = player_rect.y
+            game_sc.blit(bullet, bullet)
+
     for i in range(enemies_num):
         enemy = enemies_coords[i]
         enemy.x += enemies_speed[i]
         if enemy.x > 800 - enemy.width:
             enemy.y += 40
             enemies_speed[i] = -enemies_speed[i]
+        elif enemy.x <= 0:
+            enemy.y += 40
+            enemies_speed[i] = -enemies_speed[i]
 
         game_sc.blit(enemies[i], enemies_coords[i])
+
+    if bullet_status == 'fire':
+        bullet_rect.y -= bullet_speed
 
     game_sc.blit(player, player_rect)
 
