@@ -64,7 +64,7 @@ while True:
             bullet_status = 'fire'
             bullet_rect.x = player_rect.x
             bullet_rect.y = player_rect.y
-            game_sc.blit(bullet, bullet)
+            game_sc.blit(bullet, bullet_rect)
 
     for i in range(enemies_num):
         enemy = enemies_coords[i]
@@ -76,10 +76,21 @@ while True:
             enemy.y += 40
             enemies_speed[i] = -enemies_speed[i]
 
+        index = bullet_rect.collidelist(enemies_coords)
+        if index != -1:
+            bullet_status = 'ready'
+            bullet_rect.y = player_rect.y
+            enemies_coords[index].x = randint(0, 736)
+            enemies_coords[index].y = randint(50, 150)
+
         game_sc.blit(enemies[i], enemies_coords[i])
+
+    if bullet_rect.y <= 0:
+        bullet_status = 'ready'
 
     if bullet_status == 'fire':
         bullet_rect.y -= bullet_speed
+        game_sc.blit(bullet, bullet_rect)
 
     game_sc.blit(player, player_rect)
 
